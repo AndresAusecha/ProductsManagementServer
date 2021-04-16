@@ -1,0 +1,19 @@
+{
+  "name": "products-management",
+  "version": "1.0.0",
+  "description": "Management of products sold, stock, accounting and so on.",
+  "scripts": {
+    "test": "test",
+    "start": "node ./bin/www.js"
+  },
+  "keywords": [
+    "products",
+    "management"
+  ],
+  "author": "AndresAusecha",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.6.6"
+  }
+}
