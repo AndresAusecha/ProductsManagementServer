@@ -2,11 +2,20 @@ const port = 5000;
 
 const app = require('../server');
 
-app.set('port', port);
-
-
 var http = require('http');
 
-const server = http.createServer(app);
+const db = require('mongodb').MongoClient;
 
-server.listen(port);
+const dbUrl = "mongodb://localhost:27017/Products";
+
+app.set('port', port);
+
+db.connect(dbUrl, (err, db) => {
+  if (err) {
+    console.log("Error", err);
+    return;
+  }
+  app.set('db', db);
+  const server = http.createServer(app);
+  server.listen(port);  
+})
