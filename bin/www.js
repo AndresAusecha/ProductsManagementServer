@@ -4,6 +4,8 @@ const app = require('../server');
 
 var http = require('http');
 
+const express = require('express');
+
 const client = require('mongodb').MongoClient;
 
 const dbUrl = "mongodb://localhost:27017";
@@ -18,4 +20,4 @@ client.connect(dbUrl, (err, db) => {
   app.set('db', db.db('Products'));
   const server = http.createServer(app);
   server.listen(port);  
-})
+});
