@@ -4,8 +4,6 @@ const app = require('../server');
 
 var http = require('http');
 
-const express = require('express');
-
 const client = require('mongodb').MongoClient;
 
 const dbUrl = "mongodb://localhost:27017";
