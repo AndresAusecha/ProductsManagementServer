@@ -2,20 +2,24 @@ const port = 5000;
 
 const app = require('../server');
 
-var http = require('http');
-
-const client = require('mongodb').MongoClient;
-
-const dbUrl = "mongodb://localhost:27017";
-
 app.set('port', port);
 
-client.connect(dbUrl, (err, db) => {
-  if (err) {
-    console.log("Error", err);
-    return;
+const http = require('http');
+
+const mongoose = require('mongoose');
+
+const dbUrl = "mongodb://localhost:27017/Products";
+
+mongoose.connect(
+  dbUrl,
+  { useNewUrlParser: true },
+  () => {
+    console.log('Database has been connected correctly');
+    /* if (err) {
+      console.log("Error", err);
+      return;
+    }  */
+    const server = http.createServer(app);
+    server.listen(port);
   }
-  app.set('db', db.db('Products'));
-  const server = http.createServer(app);
-  server.listen(port);  
-});
+);
