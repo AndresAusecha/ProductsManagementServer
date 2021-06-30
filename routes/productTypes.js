@@ -3,13 +3,16 @@ const ProductType = require('../models/ProductType');
 
 const router = express.Router();
 
-
-
-router.get('/', (req, res, next) => {
-  
+router.get('/', async (_, res) => {
+  try {
+    const list = await ProductType.find();
+    res.status(200).json(list);
+  } catch (error) {
+    res.status(400).json({ "success": false, "message":"Product types not found" });
+  }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', async (req, res) => {
   const productTypeRegistry = new ProductType({
     name: req.body.name,
   });
