@@ -6,6 +6,9 @@ const ProductSchema = mongoose.Schema({
   },
   price: {
     type: mongoose.Schema.Types.Number,
+    validate: (value) => {
+      if(value < 0) throw new Error("Price cannot be negative");
+    }
   },
 });
 

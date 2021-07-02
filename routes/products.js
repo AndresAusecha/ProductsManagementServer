@@ -1,54 +1,47 @@
 const express = require('express');
+const logger = require('../functions');
 const Products = require('../models/Products');
 const ProductType = require('../models/ProductType');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  
+router.get('/', async (_, res) => {
+  try {
+    const list = await Products.find();
+    res.status(200).json(list);
+  } catch (error) {
+    logger(`Error getting product types: ${error}`);
+  }
 });
 
 router.post('/', async (req, res) => {
-  console.log(`--------------------------------------------------------------`);
-  console.log("Request to insert product received");
-  console.log(req.body);
-  console.log(`--------------------------------------------------------------`);
+  logger(`Request to insert product received ${req.body}`);
   const { prodType: ptId, name, price } = req.body;
+
   const Product = new Products({ name, price });
-  try {
-    // Add logic to update the product type
-    ProductType.findById(ptId, async (err, registry) => {
-      console.log(registry);
-      if(err){
-        console.log(`--------------------------------------------------------------`);
-        console.log(`Error finding product type with id: ${ptId} on ${new Date()} `);
-        console.log(err);
-        console.log(`--------------------------------------------------------------`);
-        res.status(400).json({ "success": false, "message":"Error finding the product type" });
-        return;
-      }
-      const prodRegistry = await Product.save();
-      console.log(prodRegistry);
-      try {
-        const newList = [...registry.productList, prodRegistry];
-        console.log(newList);
-        const updateRes = await ProductType.updateOne({ _id: ptId }, { productList: newList });
-        console.log(updateRes);
-        res.status(200).json({ "success": true, "message":"Product inserted correctly" }); 
-      } catch (error) {
-        console.log(`--------------------------------------------------------------`);
-        console.log(`Error updating product type with id: ${ptId} on ${new Date()} `);
-        console.log(error);
-        console.log(`--------------------------------------------------------------`);
-        res.status(400).json({ "success": false, "message":"Error finding the product type" }); 
-      }
-    });
-  } catch (error) {
-    console.log(`--------------------------------------------------------------`);
-    console.log(`Error finding product type with id: ${ptId} on ${new Date()} `);
-    console.log(error);
-    console.log(`--------------------------------------------------------------`);
-    res.status(400).json({ "success": false, "message":"Error saving the product" }); 
-  }
+  ProductType.findById(ptId, async (err, registry) => {
+    console.log(registry);
+    if (err) {
+      logger(`Error finding product type ${err}`);
+      res.status(400).send({ "success": false, "message": "Error finding the product type" });
+      return;
+    }
+    let prodRegistry;
+    try {
+      prodRegistry = await Product.save();
+    } catch (error) {
+      logger(`Error inserting product ${error}`);
+      res.status(400).send({ "success": false, "message": "Error inserting the product" });
+    }
+
+    const newList = [...registry.productList, prodRegistry];
+    try {
+      await ProductType.updateOne({ _id: ptId }, { productList: newList });
+      res.status(200).json({ "success": true, "message": "Product inserted correctly" });
+    } catch (error) {
+      logger(`Error inserting product ${error}`);
+      res.status(400).send({ "success": false, "message": "Error inserting the product" });
+    }
+  });
 });
 
 module.exports = router;
