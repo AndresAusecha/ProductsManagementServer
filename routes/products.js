@@ -14,7 +14,7 @@ router.get('/', async (_, res) => {
 });
 
 router.post('/', async (req, res) => {
-  logger(`Request to insert product received ${req.body}`);
+  logger(`Request to insert product received ${JSON.stringify(req.body)}`);
   const { prodType: ptId, name, price } = req.body;
 
   const Product = new Products({ name, price });
@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
     console.log(registry);
     if (err) {
       logger(`Error finding product type ${err}`);
-      res.status(400).send({ "success": false, "message": "Error finding the product type" });
+      res.status(500).send({ "success": false, "message": "Error finding the product type" });
       return;
     }
     let prodRegistry;
@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
       prodRegistry = await Product.save();
     } catch (error) {
       logger(`Error inserting product ${error}`);
-      res.status(400).send({ "success": false, "message": "Error inserting the product" });
+      res.status(500).send({ "success": false, "message": "Error inserting the product" });
     }
 
     const newList = [...registry.productList, prodRegistry];
@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
       res.status(200).json({ "success": true, "message": "Product inserted correctly" });
     } catch (error) {
       logger(`Error inserting product ${error}`);
-      res.status(400).send({ "success": false, "message": "Error inserting the product" });
+      res.status(500).send({ "success": false, "message": "Error inserting the product" });
     }
   });
 });

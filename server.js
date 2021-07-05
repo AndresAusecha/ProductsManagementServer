@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const products = require('./routes/products');
 const productTypes = require('./routes/productTypes');
+const sales = require('./routes/sales');
 
 const app = express();
 
@@ -24,5 +25,7 @@ app.get('/', (req, res) => {
 app.use('/products', products);
 
 app.use('/product_types', productTypes);
+
+app.use('/sales', sales);
 
 module.exports = app;
