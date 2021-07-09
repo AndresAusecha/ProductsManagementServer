@@ -31,7 +31,6 @@ class ProductsService {
         try {
           await ProductType.updateOne({ _id: ptId }, { productList: newList });
           resolve({});
-          //res.status(200).json({ "success": true, "message": "Product inserted correctly" });
         } catch (error) {
           logger(`Error inserting product ${error}`);
           reject(error);
