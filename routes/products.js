@@ -17,7 +17,13 @@ router.get('/', async (_, res) => {
 
 router.post('/', async (req, res) => {
   logger(`Request to insert product received ${JSON.stringify(req.body)}`);
-  prodService.create(req, res);
+  prodService.create(req.body)
+    .then(() => {
+      res.status(200).json({ "success": true, "message": "Product inserted correctly" });
+    })
+    .catch(() => {
+      res.status(500).send({ "success": false, "message": "Error inserting the product" });
+    })
 });
 
 module.exports = router;
