@@ -4,7 +4,7 @@
   "description": "Management of products sold, stock, accounting and so on.",
   "scripts": {
     "test": "test",
-    "start": "node ./bin/www.js"
+    "start": "nodemon ./bin/www.js"
   },
   "keywords": [
     "products",
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.0.0",
+    "nodemon": "^2.0.10",
     "typescript": "^4.3.5"
   }
 }
