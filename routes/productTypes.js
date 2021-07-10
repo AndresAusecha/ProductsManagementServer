@@ -1,5 +1,4 @@
 const express = require('express');
-const ProductType = require('../models/ProductType');
 const ProductTypeService = require('../services/productType.service');
 
 const router = express.Router();
