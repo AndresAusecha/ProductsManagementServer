@@ -2,13 +2,15 @@
 const logger = require("../functions");
 
 const express = require('express');
-const SaleModel = require('../models/Sale');
+const SalesService = require('../services/sales.service.js');
+
+const salesService = new SalesService();
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (_, res) => {
   try {
-    const data = await SaleModel.find();
+    const data = await salesService.getList();
     res.status(200).json(data);
   } catch (error) {
     logger(error);
@@ -16,17 +18,9 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', (req, res) => {
-  const { total, productsList } = req.body;
-
-  const sale = new SaleModel({
-    total, 
-    productsList,
-    date: new Date(),
-  });
-
+router.post('/', async (req, res) => {
   try {
-    sale.save();
+    await salesService.create(req.body);
     res.status(200).json({ "success": true, "message": "Sale was inserted correctly"});
   } catch (error) {
     logger(error);
